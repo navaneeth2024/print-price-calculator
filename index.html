@@ -27,15 +27,139 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .container {
+            display: none; /* Initially hidden */
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        h1{
+            text-align: center;
+        }
+        div.main{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+        div.input,div.btn,div.shop{
+            display: flex;
+            gap: 20px;
+        }
+        #error{
+            color: red;
+            font-style: italic;
+        }
+        @media(orientation: portrait) {
+            div.main{
+                display: flex;
+                flex-direction: column;
+            }
+            div.btn,div.shop{
+            display: flex;
+            gap: 20px;
+            }
+            div.input{
+                display: flex;
+                flex-direction: column;
+                
+            }
+        }
     </style>
     <script>
-        // After a delay, redirect to another page
+        // After a delay, show the content and hide the loader
         setTimeout(function() {
-            window.location.href = "printpricecalculator.html"; // Replace with your desired URL
+            document.querySelector('.loader').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
         }, 1000); // Delay in milliseconds (3 seconds in this example)
     </script>
 </head>
 <body>
     <div class="loader"></div>
+    <div class="container">
+        <div class="main">
+            <h1>Print Price Calculator</h1>
+            <div class="shop">
+                <input type="radio" name="shop" id="global" value="global" onchange="document.getElementById('error').innerHTML=''"><label for="global">Global</label>
+                <input type="radio" name="shop" id="xelent" value="xelent" onchange="document.getElementById('error').innerHTML=''"><label for="xelent">Xelent</label>
+                <input type="radio" name="shop" id="none" value="none" checked hidden>
+            </div>
+            <div class="input">
+                <label for="color">Color pages :</label><input type="number" name="color" id="color">
+                <label for="bw">Black & White pages :</label><input type="number" name="bw" id="bw" >
+            </div>
+            <div class="btn">
+                <input type="button" value="Calculate" onclick="calculate()">
+                <input type="button" value="Clear" onclick="clearFields()">
+            </div>
+            <div class="output">
+                <p>Your total is : &#8377;<span id="total"></span></p>
+                <p id="error"></p>
+            </div>
+        </div>
+    </div>
 </body>
+<script>
+    function calculate(){
+        var s=document.querySelector('input[name="shop"]:checked').value;
+        var errorElement = document.getElementById("error");
+        if (s=="none"){
+            errorElement.innerHTML = "Please select Global or Xelent!"; // Use textContent here
+        }
+        else if(s=="global"){
+            var x=parseFloat(document.getElementById("color").value);
+            console.log(x);
+            var y=parseFloat(document.getElementById("bw").value);
+            console.log(y);
+            if(!x && !y){
+                document.getElementById("total").textContent="";
+            }
+            else if(!x){
+                var total=y*1.5;
+                document.getElementById("total").textContent=total;
+            }
+            else if(!y){
+                var total=x*10;
+                document.getElementById("total").textContent=total;
+            }
+            else{
+                var total=(x*10)+(y*1.5);
+                document.getElementById("total").textContent=total;
+            }
+            
+        }
+        else if(s=="xelent"){
+            var x=parseFloat(document.getElementById("color").value);
+            console.log(x);
+            var y=parseFloat(document.getElementById("bw").value);
+            console.log(y);
+            if(!x && !y){
+                document.getElementById("total").textContent="";
+            }
+            else if(!x){
+                var total=y*1;
+                document.getElementById("total").textContent=total;
+            }
+            else if(!y){
+                var total=x*10;
+                document.getElementById("total").textContent=total;
+            }
+            else{
+                var total=(x*10)+(y*1);
+                document.getElementById("total").textContent=total;
+            }
+        }
+        console.log(s);
+    }
+    function clearFields(){
+        document.getElementById("color").value="";
+        document.getElementById("bw").value="";
+        document.getElementById("total").innerHTML="";
+        document.getElementById("error").innerHTML="";
+        document.getElementById("none").checked = true;
+        document.getElementById("global").checked = false;
+        document.getElementById("xelent").checked = false;
+    }
+</script>
 </html>
